@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, Zavian ✨</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Confetti Celebration Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #07090e;
+            --card-bg: rgba(11, 17, 32, 0.85);
+            --card-hover: rgba(20, 29, 50, 0.9);
+            --border-subtle: rgba(255, 255, 255, 0.12);
+            --border-glow: rgba(56, 189, 248, 0.4);
+            --accent-blue: #38bdf8;
+            --accent-cyan: #22d3ee;
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --text-dim: #94a3b8;
+            --error-pink: #f472b6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Background Image Layer */
+        .bg-image-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: linear-gradient(180deg, rgba(7, 9, 14, 0.5) 0%, rgba(7, 9, 14, 0.75) 100%), url('pic2.webp');
+            background-size: cover;
+            background-position: center 20%;
+            background-repeat: no-repeat;
+            opacity: 0.45;
+            filter: grayscale(15%) contrast(105%);
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        /* Ambient Lighting Effects */
+        .ambient-glow {
+            position: fixed;
+            width: 550px;
+            height: 550px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, rgba(34, 211, 238, 0.05) 60%, transparent 100%);
+            filter: blur(90px);
+            border-radius: 50%;
+            z-index: -1;
+            pointer-events: none;
+            animation: drift 15s ease-in-out infinite alternate;
+        }
+
+        .glow-1 {
+            top: -150px;
+            left: -150px;
+        }
+
+        .glow-2 {
+            bottom: -150px;
+            right: -150px;
+            animation-delay: -7s;
+        }
+
+        @keyframes drift {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(50px, 40px) scale(1.15);
+            }
+        }
+
+        /* Floating Particles */
+        .dust-particle {
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            background-color: var(--accent-blue);
+            border-radius: 50%;
+            animation: floatUp linear infinite;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(105vh) scale(0);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: translateY(-5vh) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Hidden Navigation Bar (Revealed after entering Zavian) */
+        nav {
+            position: fixed;
+            top: 24px;
+            display: none;
+            gap: 6px;
+            background: rgba(10, 15, 28, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            padding: 6px;
+            border-radius: 100px;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        nav.show-nav {
+            display: flex;
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        nav button {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 8px 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        nav button.active,
+        nav button:hover {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(34, 211, 238, 0.25));
+            color: var(--accent-blue);
+            border: 1px solid var(--border-glow);
+        }
+
+        /* Container */
+        .main-wrapper {
+            width: 90%;
+            max-width: 800px;
+            margin-top: 130px;
+            margin-bottom: 90px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Card Styles */
+        .hero-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 28px;
+            padding: 3.5rem 3rem;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-glow), transparent);
+        }
+
+        /* Login / Gatekeeping Section */
+        .login-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-top: 1.5rem;
+        }
+
+        .input-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        .custom-name-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-glow);
+            outline: none;
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1rem;
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-align: center;
+            width: 280px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.1);
+        }
+
+        .custom-name-input:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.25);
+        }
+
+        /* Cute Error Message Box */
+        .cute-error-box {
+            display: none;
+            color: var(--error-pink);
+            font-size: 0.9rem;
+            font-weight: 500;
+            background: rgba(244, 114, 182, 0.1);
+            border: 1px solid rgba(244, 114, 182, 0.3);
+            padding: 10px 20px;
+            border-radius: 50px;
+            animation: shake 0.4s ease-in-out;
+            margin-top: 5px;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20% {
+                transform: translateX(-8px);
+            }
+
+            40% {
+                transform: translateX(8px);
+            }
+
+            60% {
+                transform: translateX(-4px);
+            }
+
+            80% {
+                transform: translateX(4px);
+            }
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--accent-blue);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+        }
+
+        h1 span {
+            background: linear-gradient(135deg, #ffffff 40%, var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            line-height: 1.8;
+            max-width: 520px;
+            margin: 0 auto 2rem auto;
+            font-weight: 300;
+        }
+
+        .btn-action {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(34, 211, 238, 0.2));
+            color: var(--accent-blue);
+            border: 1px solid var(--border-glow);
+            padding: 0.9rem 2.2rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-action:hover {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(34, 211, 238, 0.3));
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(56, 189, 248, 0.25);
+        }
+
+        /* Heartfelt Note */
+        .feature-note {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.7s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+            opacity: 0;
+            text-align: left;
+            margin-top: 0;
+            border-top: 1px solid transparent;
+        }
+
+        .feature-note.show {
+            max-height: 450px;
+            opacity: 1;
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .feature-note p {
+            color: var(--text-main);
+            font-size: 1rem;
+            line-height: 1.9;
+            font-weight: 300;
+            margin-bottom: 1.2rem;
+        }
+
+        .signature {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.1rem;
+            color: var(--accent-blue);
+            text-align: right;
+            margin-top: 1.5rem;
+        }
+
+        /* Section Titles */
+        .section-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .section-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 500;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 300;
+        }
+
+        /* Gallery Grid Layout */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 480px) {
+            .gallery-grid {
+                gap: 12px;
+            }
+        }
+
+        .photo-item {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .photo-item:hover {
+            transform: translateY(-5px);
+            border-color: rgba(56, 189, 248, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .photo-box {
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.02);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .photo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .photo-item:hover .photo-box img {
+            transform: scale(1.05);
+        }
+
+        .photo-caption {
+            padding: 1rem 1.2rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.5px;
+            border-top: 1px solid var(--border-subtle);
+            text-align: center;
+        }
+
+        /* Wishes Grid */
+        .wishes-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+        }
+
+        .wish-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 1.8rem 2rem;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .wish-card:hover {
+            background: var(--card-hover);
+            border-color: rgba(56, 189, 248, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .wish-number {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .wish-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-main);
+            font-weight: 400;
+        }
+
+        /* Countdown Card */
+        .countdown-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 28px;
+            padding: 3rem;
+            text-align: center;
+        }
+
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 2.5rem;
+        }
+
+        .time-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-subtle);
+            padding: 1.5rem 1rem;
+            border-radius: 18px;
+        }
+
+        .time-box span {
+            display: block;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 500;
+            color: var(--accent-blue);
+            margin-bottom: 0.2rem;
+        }
+
+        .time-box label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+
+        @media(max-width: 600px) {
+            .hero-card {
+                padding: 2.5rem 1.5rem;
+            }
+
+            h1 {
+                font-size: 2.4rem;
+            }
+
+            .countdown-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            nav {
+                top: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Background Layer -->
+    <div class="bg-image-overlay"></div>
+
+    <!-- Ambient Lighting -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+
+    <!-- Celebration Audio Element -->
+    <audio id="popSound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" preload="auto"></audio>
+
+    <!-- Floating Navigation Bar -->
+    <nav id="mainNav">
+        <button class="nav-btn active" onclick="switchPage('home', this)">LOOK!</button>
+        <button class="nav-btn" onclick="switchPage('gallery', this)">Your Insta pics</button>
+        <button class="nav-btn" onclick="switchPage('collection', this)"> Wishes for BRO </button>
+        <button class="nav-btn" onclick="switchPage('countdown', this)">Milestone</button>
+    </nav>
+
+    <div class="main-wrapper">
+
+        <!-- STEP 1: COUNTDOWN PAGE -->
+        <div id="countdown" class="page active">
+            <div class="countdown-card" id="milestoneContainer">
+                <div class="badge">⏳ Birthday Countdown</div>
+                <h2
+                    style="font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 500; margin-bottom: 0.5rem;">
+                    Countdown to Midnight</h2>
+                <p style="color: var(--text-muted); font-size: 0.95rem; font-weight: 300;">Counting down to 12:00 AM,
+                    July 26th! ✨</p>
+
+                <div class="countdown-grid">
+                    <div class="time-box">
+                        <span id="days">00</span>
+                        <label>Days</label>
+                    </div>
+                    <div class="time-box">
+                        <span id="hours">00</span>
+                        <label>Hours</label>
+                    </div>
+                    <div class="time-box">
+                        <span id="minutes">00</span>
+                        <label>Mins</label>
+                    </div>
+                    <div class="time-box">
+                        <span id="seconds">00</span>
+                        <label>Secs</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 2: GATEWAY / NAME ENTRY -->
+        <div id="loginPage" class="page">
+            <div class="hero-card">
+                <div class="badge">🔒 Special Invitation FOR BIRTHDAY BOY!!!</div>
+                <h1>Welcome to <span>Zavian's Portal</span> ✨</h1>
+                <p class="hero-desc">
+                    Enter the name of the birthday boy to unlock his special dedicated website!
+                </p>
+
+                <div class="login-box">
+                    <span class="input-label">Enter Your Name ✨</span>
+                    <input type="text" id="nameGateInput" class="custom-name-input" placeholder="Type name here..."
+                        onkeyup="handleKeyPress(event)">
+                    <button class="btn-action" onclick="verifyName()">Unlock Experience ✨</button>
+
+                    <div class="cute-error-box" id="errorMsg">
+                        Oopsie! 🥺 Only special person has the key to this space! ✨
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 3: MAIN HOME / HEARTFELT NOTE -->
+        <div id="home" class="page">
+            <div class="hero-card">
+                <div class="badge">✨ Special Dedication</div>
+                <h1>Happy Birthday, <span>Zavian</span></h1>
+                <p class="hero-desc">
+                    A quiet space created to celebrate a genuine soul, thoughtful moments, and the beginning of a
+                    wonderful new year ahead.
+                </p>
+
+                <button class="btn-action" id="revealBtn" onclick="toggleNote()">Read Heartfelt Note 🤍</button>
+
+                <!-- Heartfelt Note -->
+                <div class="feature-note" id="featureNote">
+                    <p>"Happy Birthday, Zavian ✨. I pray that Allah blesses you with a life full of barakah, protects
+                        you from every unseen hardship, accepts every sincere dua you make, and grants you happiness
+                        that stays, peace that heals, and success that never takes you away from humility. May your
+                        heart always remain as kind as it is today. Ameen. 🤍"</p>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">"Zavian ✨ the one who brings comfort,
+                        kindness, and strength wherever he goes</p>
+                    <div class="signature">With sincere best wishes for BRO!!!</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 4: PHOTO GALLERY -->
+        <div id="gallery" class="page">
+            <div class="section-header">
+                <h2>Visual Memories</h2>
+            </div>
+
+            <div class="gallery-grid">
+                <div class="photo-item">
+                    <div class="photo-box">
+                        <img src="pic1.png" alt="Zavian - Calm & Collected">
+                    </div>
+                    <div class="photo-caption">🌙 Calm & Collected</div>
+                </div>
+
+                <div class="photo-item">
+                    <div class="photo-box">
+                        <img src="pic2.webp" alt="Zavian - Peaceful Horizons">
+                    </div>
+                    <div class="photo-caption">🌿 Peaceful Horizons</div>
+                </div>
+
+                <div class="photo-item">
+                    <div class="photo-box">
+                        <img src="pic3.png" alt="Zavian - Quiet Strength">
+                    </div>
+                    <div class="photo-caption">✨ Quiet Strength</div>
+                </div>
+
+                <div class="photo-item">
+                    <div class="photo-box">
+                        <img src="pic4.webp" alt="Zavian - Traditional Elegance">
+                    </div>
+                    <div class="photo-caption">🕊️ Traditional Elegance</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 5: WISHES COLLECTION -->
+        <div id="collection" class="page">
+            <div class="section-header">
+                <h2>Curated Wishes</h2>
+                <p>Real, elegant, and sincere words written with care.</p>
+            </div>
+
+            <div class="wishes-grid">
+                <div class="wish-card">
+                    <div class="wish-number"><span>Wish 01</span><span>✨ Favorite</span></div>
+                    <div class="wish-text">"Happy Birthday, Zavian ✨. May Allah protect your heart, bless your journey,
+                        and grant you a life filled with peace, purpose, and endless barakah. Ameen."</div>
+                </div>
+
+                <div class="wish-card">
+                    <div class="wish-number"><span>Wish 02</span><span>🌙 Peaceful</span></div>
+                    <div class="wish-text">"Happy Birthday to a soul that quietly brings kindness wherever it goes. May
+                        Allah fill your life with happiness, accepted duas, and beautiful beginnings. Ameen. 🤍"</div>
+                </div>
+
+                <div class="wish-card">
+                    <div class="wish-number"><span>Wish 03</span><span>🌿 Growth</span></div>
+                    <div class="wish-text">"May this new chapter of your life bring you closer to every prayer you've
+                        whispered and every dream Allah has written for you. Happy Birthday. 🌿"</div>
+                </div>
+
+                <div class="wish-card">
+                    <div class="wish-number"><span>Wish 04</span><span>🤲🏻 Ease</span></div>
+                    <div class="wish-text">"May Allah make every road you walk easier, every decision wiser, and every
+                        tomorrow brighter. Happy Birthday."</div>
+                </div>
+
+                <div class="wish-card">
+                    <div class="wish-number"><span>Wish 05</span><span>🤲🏻 Soft Heart</span></div>
+                    <div class="wish-text">"Happy Birthday. May your heart always remain soft, your faith remain strong,
+                        and your smile never lose its reason. Ameen."</div>
+                </div>
+
+                <div class="wish-card">
+                    <div class="wish-number"><span>Wish 06</span><span>♾️ Eternal Peace</span></div>
+                    <div class="wish-text">"May Allah write for you the kind of happiness that doesn't depend on
+                        circumstances and the kind of peace that never leaves your heart. Happy Birthday."</div>
+                </div>
+
+                <div class="wish-card">
+                    <div class="wish-number"><span>Wish 07</span><span>🌸 Healing</span></div>
+                    <div class="wish-text">"Another year, another chance to grow, to heal, and to become everything
+                        Allah has written for you. Happy Birthday, Zavian."</div>
+                </div>
+
+                <div class="wish-card">
+                    <div class="wish-number"><span>Wish 08</span><span>💙 Blessings</span></div>
+                    <div class="wish-text">"May every prayer you make this year return to you as countless blessings.
+                        Happy Birthday."</div>
+                </div>
+
+                <div class="wish-card">
+                    <div class="wish-number"><span>Wish 09</span><span>🌙 Kindness</span></div>
+                    <div class="wish-text">"Happy Birthday to someone whose kindness speaks louder than words. May Allah
+                        reward every good you do, seen and unseen."</div>
+                </div>
+
+                <div class="wish-card">
+                    <div class="wish-number"><span>Wish 10</span><span>🤍 Guidance</span></div>
+                    <div class="wish-text">"May your journey always be guided by faith, your heart by kindness, and your
+                        future by Allah's best plans. Happy Birthday."</div>
+                </div>
+
+                <div class="wish-card">
+                    <div class="wish-number"><span>Wish 11</span><span>✨ Protection</span></div>
+                    <div class="wish-text">"May Allah protect your smile, strengthen your heart, and surround your life
+                        with people who bring you peace. Happy Birthday, Zavian."</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // 🎯 OFFICIAL BIRTHDAY DATE: 26 July 2026 Midnight (12:00 AM)
+        const targetDate = new Date("July 26, 2026 00:00:00").getTime();
+        let hasCelebrated = false;
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            let gap = targetDate - now;
+
+            if (gap <= 0) {
+                if (!hasCelebrated) {
+                    hasCelebrated = true;
+
+                    // 🎵 Play Celebration Sound Effect
+                    const audio = document.getElementById('popSound');
+                    if (audio) {
+                        audio.play().catch(e => console.log('Audio autoplay prevented:', e));
+                    }
+
+                    // Display Celebratory Look on Milestone tab
+                    document.getElementById('milestoneContainer').innerHTML = `
+                        <div class="badge">🎉 Happy Birthday Zavian!</div>
+                        <h2 style="font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 500; margin-bottom: 0.8rem; color: var(--accent-blue);">
+                            The Special Moment Has Arrived! ✨
+                        </h2>
+                        <p style="color: var(--text-muted); font-size: 1rem; line-height: 1.8; max-width: 500px; margin: 0 auto 1.5rem auto; font-weight: 300;">
+                            Wishing Zavian an amazing day filled with joy, peace, and endless blessings! 🥳✨
+                        </p>
+                        <div style="font-size: 2.5rem; margin-top: 10px;">🎂 🎈 🎁 ✨</div>
+                    `;
+
+                    // Confetti Celebration Effect
+                    if (typeof confetti === 'function') {
+                        confetti({
+                            particleCount: 150,
+                            spread: 90,
+                            origin: { y: 0.6 }
+                        });
+                        setTimeout(() => {
+                            confetti({ particleCount: 100, angle: 60, spread: 60, origin: { x: 0 } });
+                            confetti({ particleCount: 100, angle: 120, spread: 60, origin: { x: 1 } });
+                        }, 300);
+                    }
+
+                    // Auto-Redirect to Unlock/Name Gate page after 1.5s
+                    setTimeout(() => {
+                        document.getElementById('countdown').classList.remove('active');
+                        document.getElementById('loginPage').classList.add('active');
+                    }, 1500);
+                }
+                return;
+            }
+
+            const second = 1000;
+            const minute = second * 60;
+            const hour = minute * 60;
+            const day = hour * 24;
+
+            document.getElementById('days').innerText = String(Math.floor(gap / day)).padStart(2, '0');
+            document.getElementById('hours').innerText = String(Math.floor((gap % day) / hour)).padStart(2, '0');
+            document.getElementById('minutes').innerText = String(Math.floor((gap % hour) / minute)).padStart(2, '0');
+            document.getElementById('seconds').innerText = String(Math.floor((gap % minute) / second)).padStart(2, '0');
+        }
+
+        // Start Countdown Loop
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Name Verification Logic
+        function verifyName() {
+            const inputVal = document.getElementById('nameGateInput').value.trim().toLowerCase();
+            const errorBox = document.getElementById('errorMsg');
+
+            if (inputVal === 'zavian') {
+                errorBox.style.display = 'none';
+                document.getElementById('loginPage').classList.remove('active');
+                document.getElementById('home').classList.add('active');
+                document.getElementById('mainNav').classList.add('show-nav');
+            } else {
+                errorBox.style.display = 'block';
+                errorBox.style.animation = 'none';
+                void errorBox.offsetWidth;
+                errorBox.style.animation = 'shake 0.4s ease-in-out';
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                verifyName();
+            }
+        }
+
+        function switchPage(pageId, btnElement) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.getElementById(pageId).classList.add('active');
+            btnElement.classList.add('active');
+        }
+
+        function toggleNote() {
+            const noteBox = document.getElementById('featureNote');
+            const btn = document.getElementById('revealBtn');
+            noteBox.classList.toggle('show');
+            btn.textContent = noteBox.classList.contains('show') ? "Close Note 🔒" : "Read Heartfelt Note 🤍";
+        }
+
+        // Floating Dust Particle Effect
+        for (let i = 0; i < 25; i++) {
+            let particle = document.createElement('div');
+            particle.className = 'dust-particle';
+            particle.style.left = Math.random() * 100 + 'vw';
+            particle.style.animationDuration = (Math.random() * 6 + 5) + 's';
+            particle.style.animationDelay = (Math.random() * 5) + 's';
+            document.body.appendChild(particle);
+        }
+    </script>
+</body>
+
+</html>
